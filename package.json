@@ -1,0 +1,52 @@
+{
+  "name": "node-solid-architecture",
+  "version": "1.0.0",
+  "description": "Solid architecture for Node.js with Express.js implementing Clean Architecture. Node.js.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "build": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint-fix": "eslint \"**/*.js\" --fix"
+  },
+  "author": "cerciber",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "module-alias": "^2.2.3",
+    "nodemon": "^2.0.22",
+    "octokit": "^3.1.2",
+    "swagger-ajv": "^4.0.0",
+    "swagger-client": "^3.20.0",
+    "swagger-express-validator": "^1.0.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-model-validator": "^3.0.21",
+    "swagger-parser": "^10.0.3",
+    "swagger-ui-express": "^4.6.3",
+    "uuid": "^9.0.0",
+    "winston": "^3.10.0"
+  },
+  "_moduleAliases": {
+    "@src": "./src"
+  },
+  "devDependencies": {
+    "@types/module-alias": "^2.0.1",
+    "eslint": "^8.47.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jsonc-eslint-parser": "^2.3.0",
+    "prettier": "^3.0.1"
+  }
+}
