@@ -21,8 +21,8 @@ module.exports = {
   servers: [],
   tags: [
     {
-      name: 'GitHubAPI',
-      description: 'GitHub API requests.',
+      name: 'Kitchen',
+      description: 'Kitchen requests.',
     },
   ],
   components: {

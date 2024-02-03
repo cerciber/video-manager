@@ -4,7 +4,7 @@ module.exports = {
 
   // Paths to scan schemas
   SCHEMAS_SCAN_PATHS: [
-    '@src/adapters/schemas/gitHubApiSchemas',
+    '@src/adapters/schemas/videoManagerSchemas',
     '@src/adapters/schemas/response',
   ],
 };

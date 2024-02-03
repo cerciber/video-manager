@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Rols {
+  rolId                 Int     @default(autoincrement()) @id
+  key                   String  @unique
+  authUsers             AuthUsers[]
+  permissions           Permissions[]
+}
+
+model Methods {
+  methodId              Int     @default(autoincrement()) @id
+  key                   String  @unique
+  permissionMethods   PermissionMethods[]
+}
+
+model PathKeys {
+  pathKeyId             Int     @default(autoincrement()) @id
+  key                   String  @unique
+  permissionPathKeys    PermissionPathKeys[]
+}
+
+model AuthUsers {
+  authUserId  Int        @default(autoincrement()) @id
+  rol         Rols       @relation(fields: [rolId], references: [rolId])
+  rolId       Int
+  username    String     @unique
+  password    String
+  user        Users?
+}
+
+model Users {
+  userId      Int        @default(autoincrement()) @id
+  authUser    AuthUsers  @relation(fields: [authUserId], references: [authUserId])
+  authUserId  Int        @unique
+  name        String    
+  email       String     @unique
+  cellphone   String     @unique
+  videos      Videos[] 
+  likes       Likes[]
+  comments    Comments[]
+}
+
+model Videos {
+  videoId           Int        @default(autoincrement()) @id
+  user              Users      @relation(fields: [userId], references: [userId])
+  userId            Int
+  title             String    
+  description       String
+  credits           String
+  url               String
+  private           Boolean
+  publicationDate   DateTime   @default(now()) @db.Timestamp()
+  likes             Likes[]
+  comments          Comments[]
+}
+
+model Permissions {
+  permissionId        Int        @default(autoincrement()) @id
+  rol                 Rols       @relation(fields: [rolId], references: [rolId])
+  rolId               Int
+  permissionMethods   PermissionMethods[]
+  permissionPathKeys  PermissionPathKeys[]
+}
+
+model PermissionMethods {
+  permissionMethodId    Int           @default(autoincrement()) @id
+  permission            Permissions   @relation(fields: [permissionId], references: [permissionId])
+  permissionId          Int
+  method                Methods       @relation(fields: [methodId], references: [methodId])
+  methodId              Int
+}
+
+model PermissionPathKeys {
+  permissionPathKeysId    Int           @default(autoincrement()) @id
+  permission              Permissions   @relation(fields: [permissionId], references: [permissionId])
+  permissionId            Int
+  pathKey                 PathKeys      @relation(fields: [pathKeyId], references: [pathKeyId])
+  pathKeyId               Int
+}
+
+model Likes {
+  user        Users      @relation(fields: [userId], references: [userId])
+  userId      Int
+  video       Videos     @relation(fields: [videoId], references: [videoId])
+  videoId     Int
+  @@id([userId, videoId])
+}
+
+model Comments {
+  commentId         Int        @default(autoincrement()) @id
+  user              Users      @relation(fields: [userId], references: [userId])
+  userId            Int
+  video             Videos     @relation(fields: [videoId], references: [videoId])
+  videoId           Int
+  comment           String
+  publicationDate   DateTime   @default(now()) @db.Timestamp()
+}

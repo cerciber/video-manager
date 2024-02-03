@@ -7,11 +7,17 @@
     "start": "node src/index.js",
     "build": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "lint-fix": "eslint \"**/*.js\" --fix"
+    "lint-fix": "eslint \"**/*.js\" --fix",
+    "prisma:generate": "npx prisma generate --schema src/frameworks/DB/database/prisma/schema.prisma",
+    "prisma:push": "npx prisma db push --schema src/frameworks/DB/database/prisma/schema.prisma --accept-data-loss",
+    "prisma:migrate": "npx prisma migrate dev --create-only --schema src/frameworks/DB/database/prisma/schema.prisma --name",
+    "prisma:reset": "npx prisma migrate reset --schema src/frameworks/DB/database/prisma/schema.prisma --force && node src/frameworks/DB/database/prisma/seed.js",
+    "prisma:deploy": "npx prisma migrate deploy --schema src/frameworks/DB/database/prisma/schema.prisma"
   },
   "author": "cerciber",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.9.0",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -20,6 +26,7 @@
     "express-async-errors": "^3.1.1",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.3",
     "nodemon": "^2.0.22",
@@ -47,6 +54,7 @@
     "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jsonc-eslint-parser": "^2.3.0",
-    "prettier": "^3.0.1"
+    "prettier": "^3.0.1",
+    "prisma": "^5.9.0"
   }
 }

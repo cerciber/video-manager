@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build -t github-api .
-docker run -p 3000:3000 github-api
+docker build -t kitchen-ms .
+docker run -p 3001:3001 kitchen-ms

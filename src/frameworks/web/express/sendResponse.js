@@ -9,8 +9,8 @@ module.exports = (req, res, body) => {
       `Response on endpoint [${req.method}]:${req.originalUrl}`,
       logger.types.USER,
       'endpoint',
-      'response',
-      `Response: ${JSON.stringify(body, null, 2)}`
+      'response'
+      // `Response: ${JSON.stringify(body, null, 2)}`
     );
   } else {
     logger.error(

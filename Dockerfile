@@ -14,7 +14,9 @@ RUN npm i
 COPY . .
 
 # Expose the port where the application will run
-EXPOSE 3000
+EXPOSE 3001
 
 # Command to run the application
+RUN npm run prisma:generate
+RUN npm run prisma:reset
 CMD ["node", "src/index.js"]

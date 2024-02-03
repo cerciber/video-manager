@@ -13,9 +13,6 @@ const pathNoFoundMiddleware = require('./middelwares/pathNoFoundMiddleware');
 // Instance express app
 const app = express();
 
-// Set timeOut
-app.timeout = 300000; // 5 minutes
-
 // Middlewares standard
 app.use(express.json()); // Format Json Data
 app.use(cors()); // Allow comunication of all origins
