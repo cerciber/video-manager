@@ -1,5 +1,6 @@
 // Imports
 const database = require('@src/frameworks/DB/database/database');
+const response = require('@src/adapters/presenters/response');
 
 async function loadAll(tableName, parameters) {
   // Find all data
@@ -8,11 +9,24 @@ async function loadAll(tableName, parameters) {
 }
 
 async function saveOne(tableName, register) {
-  // Save data
-  const savedRegister = await database[tableName].create({
-    data: register,
-  });
-  return savedRegister;
+  try {
+    // Save data
+    const savedRegister = await database[tableName].create({
+      data: register,
+    });
+    return response.success(201, 'User registered successfully.', {
+      savedRegister,
+    });
+  } catch (error) {
+    if (error.code === 'P2002') {
+      return response.success(
+        409,
+        `The field '${error.meta.target[0]}' already exist.`,
+        {}
+      );
+    }
+    throw error;
+  }
 }
 
 async function update(tableName, parameters, transaction = database) {

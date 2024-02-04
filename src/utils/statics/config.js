@@ -18,7 +18,10 @@ module.exports = {
       databaseUrl: process.env.DATABASE_URL || '',
     },
   },
-  application: {},
+  application: {
+    jwtSectetKey: process.env.JWT_SECRET_KEY || 'SECRET_KEY',
+    jwtDuration: process.env.JWT_DURATION || '1h',
+  },
   entities: {
     passwordEncryptSaltRounds:
       Number(process.env.PASSWORD_ENCRYPT_SALT_ROUNDS) || 10,

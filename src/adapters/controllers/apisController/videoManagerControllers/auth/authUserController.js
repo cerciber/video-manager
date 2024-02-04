@@ -59,8 +59,18 @@ async function signinUserAuthController(body) {
     200: [
       [
         validateResponse,
-        [200, userAuthResponse, { token: 'Token' }],
+        [200, userAuthResponse],
         `Response not have correct structure.`,
+      ],
+      [
+        validateObjectKeys,
+        [userAuthResponse?.body, ['token']],
+        `Response not have correct structure.`,
+      ],
+      [
+        validateNonEmptyString,
+        [userAuthResponse?.body?.token],
+        'Param token is an empty string value.',
       ],
     ],
     404: [
@@ -88,29 +98,39 @@ async function signinUserAuthController(body) {
 // Add
 async function signupUserAuthController(body) {
   // Get input
-  const { userAuth } = body;
+  const userSiginUpNoId = body;
 
   // Validate input
   const inputValidation = validate([
     [
-      validateObjectKeys,
-      [body, ['userAuth']],
-      'Body is not an key object type with specific keys.',
-    ],
-    [
       validateSchema,
-      ['UserAuthNoId', userAuth],
+      ['UserSiginUpNoId', userSiginUpNoId],
       'UserAuthNoId schema not have correct structure.',
     ],
     [
       validateNonEmptyString,
-      [userAuth?.username],
+      [userSiginUpNoId?.username],
       'Param username is an empty string value.',
     ],
     [
       validateNonEmptyString,
-      [userAuth?.password],
+      [userSiginUpNoId?.password],
       'Param password is an empty string value.',
+    ],
+    [
+      validateNonEmptyString,
+      [userSiginUpNoId?.name],
+      'Param name is an empty string value.',
+    ],
+    [
+      validateNonEmptyString,
+      [userSiginUpNoId?.email],
+      'Param email is an empty string value.',
+    ],
+    [
+      validateNonEmptyString,
+      [userSiginUpNoId?.cellphone],
+      'Param cellphone is an empty string value.',
     ],
   ]);
 
@@ -125,9 +145,13 @@ async function signupUserAuthController(body) {
 
   // Apply bussiness logic
   const addUserResponse = await signupUserAuthCase(
-    userAuth.username,
-    userAuth.password
+    userSiginUpNoId.username,
+    userSiginUpNoId.password,
+    userSiginUpNoId.name,
+    userSiginUpNoId.email,
+    userSiginUpNoId.cellphone
   );
+  console.log(addUserResponse);
 
   // Validate output
   const outputValidation = validateByStatus(addUserResponse.status, {

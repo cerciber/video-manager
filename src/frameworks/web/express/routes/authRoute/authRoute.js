@@ -30,7 +30,7 @@ const router = require('@src/frameworks/web/express/router')();
  *                 schema:
  *                   properties:
  *                     body:
- *                       $ref: '#/components/schemas/User'
+ *                       $ref: '#/components/schemas/Token'
  *       400:
  *         allOf:
  *           - $ref: '#/components/responses/400'
@@ -58,7 +58,7 @@ router.post(paths.authSignIn.path, async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserAuth'
+ *             $ref: '#/components/schemas/UserSiginUpNoId'
  *     responses:
  *       201:
  *         allOf:

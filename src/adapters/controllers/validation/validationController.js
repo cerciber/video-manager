@@ -25,7 +25,7 @@ function validate(list) {
   }
   return {
     valid,
-    badMessage: `ValidateFormatError: ${message || errors[0]?.message || ''}`,
+    badMessage: `${message || errors[0]?.message || ''}`,
     details: { errors, comparison: { expected, obtained } },
   };
 }

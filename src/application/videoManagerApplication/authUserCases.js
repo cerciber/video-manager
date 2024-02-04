@@ -11,13 +11,13 @@ const TABLE = 'authUsers';
 async function signinUserAuthCase(username, password) {
   // Get gateway data
   const gatewayUserAuth = await gateway.loadAll(TABLE, {
-    username,
+    where: { username },
   });
 
   // Check if username is incorrect
   if (!gatewayUserAuth || gatewayUserAuth.length === 0) {
     // Return response
-    return response.success(404, 'User Auth incorrect.', {});
+    return response.error(404, 'User Auth incorrect.', {});
   }
 
   // Instance AuthUser entity
@@ -31,7 +31,7 @@ async function signinUserAuthCase(username, password) {
   // Check if password is incorrect
   if (!(await authUser.comparePassword(password))) {
     // Return response
-    return response.success(404, 'User Auth incorrect.', {});
+    return response.error(404, 'User Auth incorrect.', {});
   }
 
   // Generate token
@@ -44,7 +44,7 @@ async function signinUserAuthCase(username, password) {
 }
 
 // Add
-async function signupUserAuthCase(username, password) {
+async function signupUserAuthCase(username, password, name, email, cellphone) {
   // Instance AuthUser entity
   const authUser = new AuthUser(undefined, username, password, false);
 
@@ -52,20 +52,25 @@ async function signupUserAuthCase(username, password) {
   const gatewayUserAuthAdded = await gateway.saveOne(TABLE, {
     username: authUser.username,
     password: authUser.getPassword(),
+    rol: {
+      connect: {
+        key: 'common',
+      },
+    },
+    user: {
+      create: {
+        name,
+        email,
+        cellphone,
+      },
+    },
   });
 
-  // User added
-  if (gatewayUserAuthAdded.status === 201) {
-    return response.success(201, 'User Auth registered successfully.', {});
-  }
-
-  // User already exist
-  if (gatewayUserAuthAdded.status === 409) {
-    return response.success(409, 'User Auth already exist.', {});
-  }
-
-  // Return response
-  return gatewayUserAuthAdded;
+  return response.success(
+    gatewayUserAuthAdded.status,
+    gatewayUserAuthAdded.message,
+    {}
+  );
 }
 
 // Exports
