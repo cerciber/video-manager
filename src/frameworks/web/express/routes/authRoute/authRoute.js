@@ -12,7 +12,7 @@ const router = require('@src/frameworks/web/express/router')();
  * ${authSignIn}:
  *   post:
  *     tags:
- *       - FakeAPI
+ *       - Auth
  *     summary: Authenticate user on system.
  *     description: Validate user Authentication.
  *     requestBody:
@@ -50,9 +50,9 @@ router.post(paths.authSignIn.path, async (req, res) => {
  * ${authSignUp}:
  *   post:
  *     tags:
- *       - FakeAPI
+ *       - Auth
  *     summary: Register an user authentication
- *     description: Register an user authentication with the provided data.
+ *     description: Register an user authentication with the provided data as 'common'.
  *     requestBody:
  *       required: true
  *       content:
@@ -68,7 +68,7 @@ router.post(paths.authSignIn.path, async (req, res) => {
  *                 schema:
  *                   properties:
  *                     body:
- *                        $ref: '#/components/schemas/User'
+ *                        $ref: '#/components/schemas/UserSiginUp'
  *       400:
  *         allOf:
  *           - $ref: '#/components/responses/400'

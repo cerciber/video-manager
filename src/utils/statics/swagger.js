@@ -1,9 +1,9 @@
 module.exports = {
   openapi: '3.0.3',
   info: {
-    title: 'GitHub API consumer',
+    title: 'Video manager',
     description:
-      'Technical challenge to be a Node.js Backend Developer in BeMaster. Node.js.',
+      'Technical challenge to be a Node.js Backend Developer in BeMaster. Final phase. Node.js.',
     termsOfService: '',
     contact: {
       email: 'cerciber@hotmail.com',
@@ -21,8 +21,8 @@ module.exports = {
   servers: [],
   tags: [
     {
-      name: 'Kitchen',
-      description: 'Kitchen requests.',
+      name: 'Auth',
+      description: 'Auth requests.',
     },
   ],
   components: {

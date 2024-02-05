@@ -7,14 +7,17 @@ module.exports = _.cloneDeep({
     title: 'UserSiginUp',
     type: 'object',
     properties: {
-      userId: {
-        type: 'number',
-      },
       username: {
         type: 'string',
       },
-      password: {
+      rol: {
         type: 'string',
+      },
+      userId: {
+        type: 'number',
+      },
+      authUserId: {
+        type: 'number',
       },
       name: {
         type: 'string',
@@ -28,11 +31,21 @@ module.exports = _.cloneDeep({
     },
     example: {
       username: 'cesar123',
-      password: '7Y87YH8GG6Y8',
+      rol: 'common',
+      userId: 41,
+      authUserId: 55,
       name: 'Cesar',
       email: 'cesar@gmail.com',
       cellphone: '+573124563456',
     },
-    required: ['userId', 'username', 'password', 'name', 'email', 'cellphone'],
+    required: [
+      'username',
+      'rol',
+      'userId',
+      'authUserId',
+      'name',
+      'email',
+      'cellphone',
+    ],
   },
 });
