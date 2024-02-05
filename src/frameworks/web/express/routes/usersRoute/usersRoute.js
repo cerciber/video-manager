@@ -223,5 +223,134 @@ router.delete(`${paths.users.path}/:userId`, async (req, res) => {
   return sendResponse(req, res, await removeUserController(req.params));
 });
 
+/**
+ * @swagger
+ * ${ownUser}:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Get my user
+ *     description: Retrieves my own user based on auth data.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/UserSiginUp'
+ *       400:
+ *         allOf:
+ *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       404:
+ *         allOf:
+ *           - $ref: '#/components/responses/404'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.get(`${paths.ownUser.path}`, async (req, res) => {
+  return sendResponse(
+    req,
+    res,
+    await getUserByIdController({ userId: String(req.tokenPayload.userId) })
+  );
+});
+
+/**
+ * @swagger
+ * ${ownUser}:
+ *   patch:
+ *     tags:
+ *       - Users
+ *     summary: Update my user
+ *     description: Update my user with the provided data.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserAdminSiginUpNoIdOptional'
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/UserSiginUp'
+ *       400:
+ *         allOf:
+ *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       404:
+ *         allOf:
+ *           - $ref: '#/components/responses/404'
+ *       409:
+ *         allOf:
+ *           - $ref: '#/components/responses/409'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.patch(`${paths.ownUser.path}`, async (req, res) => {
+  return sendResponse(
+    req,
+    res,
+    await updateUserController(
+      { userId: String(req.tokenPayload.userId) },
+      req.body
+    )
+  );
+});
+
+/**
+ * @swagger
+ * ${ownUser}:
+ *   delete:
+ *     tags:
+ *       - Users
+ *     summary: Delete my user
+ *     description: Delete my user.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *       400:
+ *         allOf:
+ *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       404:
+ *         allOf:
+ *           - $ref: '#/components/responses/404'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.delete(`${paths.ownUser.path}`, async (req, res) => {
+  return sendResponse(
+    req,
+    res,
+    await removeUserController({ userId: String(req.tokenPayload.userId) })
+  );
+});
+
 // Exports
 module.exports = router;

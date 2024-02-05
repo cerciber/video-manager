@@ -12,6 +12,9 @@ async function signinUserAuthCase(username, password) {
   // Get gateway data
   const gatewayUserAuth = await gateway.loadMany(TABLE, {
     where: { username },
+    include: {
+      user: true,
+    },
   });
 
   // Check if username is incorrect
@@ -34,10 +37,14 @@ async function signinUserAuthCase(username, password) {
     return response.error(404, 'User Auth incorrect.', {});
   }
 
-  // Generate token
-  const tokenSchema = new Auth().generateToken({
+  // Generate token payload
+  const tokenPayload = {
     authUserId: gatewayUserAuth[0].authUserId,
-  });
+    userId: gatewayUserAuth[0].user.userId,
+  };
+
+  // Generate token
+  const tokenSchema = new Auth().generateToken(tokenPayload);
 
   // Return response
   return response.success(200, 'User Auth retrieved successfully.', {

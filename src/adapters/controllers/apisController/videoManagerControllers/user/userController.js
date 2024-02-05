@@ -31,6 +31,7 @@ async function getUserslistController() {
 async function getUserByIdController(params) {
   // Get input
   const { userId } = params;
+  console.log(params);
 
   // Validate input
   const inputValidation = validate([

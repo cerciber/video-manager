@@ -32,7 +32,7 @@ paths.users = {
 };
 paths.ownUser = {
   // Get own, update own and delete own
-  path: `${paths.users.path}/own-user`,
+  path: `${paths.api.path}/own/user`,
   public: false,
 };
 
@@ -44,7 +44,7 @@ paths.videos = {
 };
 paths.ownVideos = {
   // Get all own, add own, update own and delete own
-  path: `${paths.videos.path}/own-videos`,
+  path: `${paths.api.path}/own/videos`,
   public: false,
 };
 paths.topVideos = {
@@ -68,7 +68,7 @@ paths.likes = {
 };
 paths.ownLikes = {
   // Get all own, add own and delete own
-  path: `${paths.likes.path}/own-likes`,
+  path: `${paths.api.path}/own/likes`,
   public: false,
 };
 
@@ -80,7 +80,7 @@ paths.comments = {
 };
 paths.ownComments = {
   // Get all own, add own and delete own
-  path: `${paths.comments.path}/own-comments`,
+  path: `${paths.api.path}/own/comments`,
   public: false,
 };
 
