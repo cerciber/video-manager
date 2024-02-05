@@ -92,7 +92,9 @@ router.get(`${paths.users.path}/:userId`, async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserSiginUpNoId'
+ *             $ref: '#/components/schemas/UserAdminSiginUpNoId'
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       201:
  *         allOf:

@@ -320,6 +320,36 @@ function validatePositiveIntegerString(value) {
   }
 }
 
+// Validate string in options
+function validateStringInOptions(value, options) {
+  try {
+    if (!options.includes(value)) {
+      throw new Error(
+        `Expected one of the following options: ${options.join(', ')}, but received '${value}'`
+      );
+    }
+
+    return {
+      valid: true,
+      errors: [],
+      expected: `One of: ${options.join(', ')}`,
+      obtained: value,
+    };
+  } catch (error) {
+    return {
+      valid: false,
+      errors: [
+        {
+          message: error.message,
+          stack: error.stack,
+        },
+      ],
+      expected: `One of: ${options.join(', ')}`,
+      obtained: value,
+    };
+  }
+}
+
 // Exports
 module.exports = {
   validateSchema,
@@ -331,4 +361,5 @@ module.exports = {
   validateObjectKeys,
   validateRegex,
   validatePositiveIntegerString,
+  validateStringInOptions,
 };

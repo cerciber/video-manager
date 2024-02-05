@@ -1,6 +1,7 @@
 // Imports
 const gateway = require('@src/adapters/gateways/dbGateway/dbGateway');
 const response = require('@src/adapters/presenters/response');
+const AuthUser = require('@src/entities/videoManagerEntities/AuthUser');
 
 // Define table users
 const AUTH_TABLE = 'authUsers';
@@ -73,22 +74,56 @@ async function getUserByIdCase(userId) {
 }
 
 // Add
-async function addUserCase(newData) {
+async function addUserCase(username, rol, password, name, email, cellphone) {
   // Add gateway data
-  const gatewayUserAdded = await gateway.add(TABLE, newData);
+  const authUser = new AuthUser(undefined, username, password, false);
+  const gatewayUserAuthAddedResponse = await gateway.saveOne(AUTH_TABLE, {
+    data: {
+      username: authUser.username,
+      password: authUser.getPassword(),
+      rol: {
+        connect: {
+          key: rol,
+        },
+      },
+      user: {
+        create: {
+          name,
+          email,
+          cellphone,
+        },
+      },
+    },
+  });
 
   // User added
-  if (gatewayUserAdded.status === 201) {
-    return response.success(201, 'User registered successfully.', {});
-  }
+  if (gatewayUserAuthAddedResponse.status === 201) {
+    // Recover data
+    const userAuthRecoverData = await gateway.loadOne(AUTH_TABLE, {
+      where: {
+        authUserId: gatewayUserAuthAddedResponse.body.savedRegister.authUserId,
+      },
+      include: {
+        rol: true,
+        user: true,
+      },
+    });
 
-  // User already exist
-  if (gatewayUserAdded.status === 409) {
-    return response.success(409, 'User already exist.', {});
+    // Format data
+    const userAuthRecoverDataFromatted = {
+      username: userAuthRecoverData.username,
+      rol: userAuthRecoverData.rol.key,
+      ...userAuthRecoverData.user,
+    };
+    return response.success(
+      201,
+      'User registered successfully.',
+      userAuthRecoverDataFromatted
+    );
   }
 
   // Return response
-  return gatewayUserAdded;
+  return gatewayUserAuthAddedResponse;
 }
 
 // Update by id

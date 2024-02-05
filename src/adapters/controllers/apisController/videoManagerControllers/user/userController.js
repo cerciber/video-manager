@@ -16,6 +16,7 @@ const {
   validateSchema,
   validateObjectKeys,
   validatePositiveIntegerString,
+  validateStringInOptions,
 } = require('@src/adapters/controllers/validation/validationFunctions');
 
 // List data
@@ -60,16 +61,20 @@ async function getUserByIdController(params) {
 // Add
 async function addUserController(body) {
   // Get input
-  const { user } = body;
+  const user = body;
 
   // Validate input
   const inputValidation = validate([
     [
-      validateObjectKeys,
-      [body, ['user']],
-      'Body is not an key object type with specific keys.',
+      validateSchema,
+      ['UserAdminSiginUpNoId', user],
+      'User schema not have correct structure.',
     ],
-    [validateSchema, ['User', user], 'User schema not have correct structure.'],
+    [
+      validateStringInOptions,
+      [user.rol, ['admin', 'common']],
+      'User rol field is not a valid rol.',
+    ],
   ]);
 
   // Return incorrect validation input
@@ -82,7 +87,14 @@ async function addUserController(body) {
   }
 
   // Apply bussiness logic
-  const addUserResponse = await addUserCase(user);
+  const addUserResponse = await addUserCase(
+    user.username,
+    user.rol,
+    user.password,
+    user.name,
+    user.email,
+    user.cellphone
+  );
 
   // Return output
   return addUserResponse;
