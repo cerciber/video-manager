@@ -6,13 +6,10 @@ const {
 } = require('@src/application/videoManagerApplication/authUserCases');
 const {
   validate,
-  validateByStatus,
 } = require('@src/adapters/controllers/validation/validationController');
 const {
   validateNonEmptyString,
-  validateResponse,
   validateSchema,
-  validateObjectKeys,
 } = require('@src/adapters/controllers/validation/validationFunctions');
 
 // Get
@@ -53,43 +50,6 @@ async function signinUserAuthController(body) {
     userAuth.username,
     userAuth.password
   );
-
-  // Validate output
-  const outputValidation = validateByStatus(userAuthResponse.status, {
-    200: [
-      [
-        validateResponse,
-        [200, userAuthResponse],
-        `Response not have correct structure.`,
-      ],
-      [
-        validateObjectKeys,
-        [userAuthResponse?.body, ['token']],
-        `Response not have correct structure.`,
-      ],
-      [
-        validateNonEmptyString,
-        [userAuthResponse?.body?.token],
-        'Param token is an empty string value.',
-      ],
-    ],
-    404: [
-      [
-        validateResponse,
-        [404, userAuthResponse, {}],
-        `Response not have correct structure.`,
-      ],
-    ],
-  });
-
-  // Return incorrect validation output
-  if (!outputValidation.valid) {
-    return response.error(
-      500,
-      outputValidation.badMessage,
-      outputValidation.details
-    );
-  }
 
   // Return correct validation output
   return userAuthResponse;
@@ -151,34 +111,6 @@ async function signupUserAuthController(body) {
     userSiginUpNoId.email,
     userSiginUpNoId.cellphone
   );
-  console.log(addUserResponse);
-
-  // Validate output
-  const outputValidation = validateByStatus(addUserResponse.status, {
-    201: [
-      [
-        validateResponse,
-        [201, addUserResponse, {}],
-        `Response not have correct structure.`,
-      ],
-    ],
-    409: [
-      [
-        validateResponse,
-        [409, addUserResponse, {}],
-        `Response not have correct structure.`,
-      ],
-    ],
-  });
-
-  // Return incorrect validation output
-  if (!outputValidation.valid) {
-    return response.error(
-      500,
-      outputValidation.badMessage,
-      outputValidation.details
-    );
-  }
 
   // Return correct validation output
   return addUserResponse;

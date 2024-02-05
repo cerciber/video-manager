@@ -48,29 +48,56 @@ async function signupUserAuthCase(username, password, name, email, cellphone) {
   // Instance AuthUser entity
   const authUser = new AuthUser(undefined, username, password, false);
 
-  // Add gateway data
-  const gatewayUserAuthAdded = await gateway.saveOne(TABLE, {
-    username: authUser.username,
-    password: authUser.getPassword(),
-    rol: {
-      connect: {
-        key: 'common',
+  // Add data
+  const gatewayUserAuthAddedResponse = await gateway.saveOne(TABLE, {
+    data: {
+      username: authUser.username,
+      password: authUser.getPassword(),
+      rol: {
+        connect: {
+          key: 'common',
+        },
       },
-    },
-    user: {
-      create: {
-        name,
-        email,
-        cellphone,
+      user: {
+        create: {
+          name,
+          email,
+          cellphone,
+        },
       },
     },
   });
 
-  return response.success(
-    gatewayUserAuthAdded.status,
-    gatewayUserAuthAdded.message,
-    {}
-  );
+  // If added success
+  if (gatewayUserAuthAddedResponse.status === 201) {
+    // Recover data
+    const userAuthRecoverData = await gateway.loadOne(TABLE, {
+      where: {
+        authUserId: gatewayUserAuthAddedResponse.body.savedRegister.authUserId,
+      },
+      include: {
+        rol: true,
+        user: true,
+      },
+    });
+
+    // Fromat data
+    const userAuthRecoverDataFromatted = {
+      username: userAuthRecoverData.username,
+      rol: userAuthRecoverData.rol.key,
+      ...userAuthRecoverData.user,
+    };
+
+    // Return response
+    return response.success(
+      201,
+      'User registered successfully.',
+      userAuthRecoverDataFromatted
+    );
+  }
+
+  // Return response
+  return gatewayUserAuthAddedResponse;
 }
 
 // Exports

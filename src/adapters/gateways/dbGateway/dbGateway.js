@@ -4,24 +4,30 @@ const response = require('@src/adapters/presenters/response');
 
 async function loadAll(tableName, parameters) {
   // Find all data
-  const randomRegister = await database[tableName].findMany(parameters);
-  return randomRegister;
+  const register = await database[tableName].findMany(parameters);
+  return register;
 }
 
-async function saveOne(tableName, register) {
+async function loadOne(tableName, parameters) {
+  // Find all data
+  const register = await database[tableName].findUnique(parameters);
+  return register;
+}
+
+async function saveOne(tableName, data) {
   try {
     // Save data
-    const savedRegister = await database[tableName].create({
-      data: register,
-    });
+    const savedRegister = await database[tableName].create(data);
+
+    // Return response
     return response.success(201, 'User registered successfully.', {
       savedRegister,
     });
   } catch (error) {
     if (error.code === 'P2002') {
-      return response.success(
+      return response.error(
         409,
-        `The field '${error.meta.target[0]}' already exist.`,
+        `The field ${error.meta.target[0]} already exist.`,
         {}
       );
     }
@@ -44,6 +50,7 @@ async function startTransaction(callback) {
 // Exports
 module.exports = {
   loadAll,
+  loadOne,
   saveOne,
   update,
   startTransaction,

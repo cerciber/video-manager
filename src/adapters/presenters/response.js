@@ -7,11 +7,11 @@ exports.success = (status, message, body) => {
   };
 };
 
-exports.error = (status, message) => {
+exports.error = (status, message, body) => {
   return {
     status,
     message,
     error: true,
-    body: {},
+    body,
   };
 };
