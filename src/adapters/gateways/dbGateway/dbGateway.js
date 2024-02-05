@@ -36,8 +36,40 @@ async function saveOne(tableName, data) {
 }
 
 async function update(tableName, parameters, transaction = database) {
-  const registers = await transaction[tableName].update(parameters);
-  return registers;
+  try {
+    // Update
+    const register = await transaction[tableName].update(parameters);
+
+    // Return response
+    return response.success(200, 'User updated successfully.', register);
+  } catch (error) {
+    if (error.code === 'P2002') {
+      return response.error(
+        409,
+        `The field ${error.meta.target[0]} already exist.`,
+        {}
+      );
+    }
+    if (error.code === 'P2025') {
+      return response.success(404, 'User not exist.', {});
+    }
+    throw error;
+  }
+}
+
+async function remove(tableName, parameters, transaction = database) {
+  try {
+    // Delete
+    const register = await transaction[tableName].deleteMany(parameters);
+
+    // Return response
+    return response.success(200, 'User deleted successfully.', register);
+  } catch (error) {
+    if (error.code === 'P2025') {
+      return response.success(404, 'User not exist.', {});
+    }
+    throw error;
+  }
 }
 
 async function startTransaction(callback) {
@@ -53,5 +85,6 @@ module.exports = {
   loadOne,
   saveOne,
   update,
+  remove,
   startTransaction,
 };

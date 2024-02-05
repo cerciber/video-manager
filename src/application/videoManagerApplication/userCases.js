@@ -6,6 +6,7 @@ const AuthUser = require('@src/entities/videoManagerEntities/AuthUser');
 // Define table users
 const AUTH_TABLE = 'authUsers';
 const TABLE = 'users';
+const ROLS_TABLE = 'rols';
 
 // List data
 async function getUserslistCase() {
@@ -70,7 +71,7 @@ async function getUserByIdCase(userId) {
   }
 
   // Return response
-  return response.success(404, 'User no exist.', {});
+  return response.success(404, 'User not exist.', {});
 }
 
 // Add
@@ -127,30 +128,98 @@ async function addUserCase(username, rol, password, name, email, cellphone) {
 }
 
 // Update by id
-async function updateUserCase(id, newData) {
-  // Update gateway data
-  const updatedUser = await gateway.update(TABLE, id, newData);
+async function updateUserCase(
+  userId,
+  username,
+  rol,
+  password,
+  name,
+  email,
+  cellphone
+) {
+  // Get new rol id
+  let newRol;
+  if (rol) {
+    newRol = await gateway.loadOne(ROLS_TABLE, {
+      where: {
+        key: rol,
+      },
+    });
+  }
 
-  // Check if user wasn't updated
-  if (!updatedUser) {
-    // Return response
-    return response.success(404, 'User no exist.', {});
+  // Update gateway data
+  const updatedUser = await gateway.update(TABLE, {
+    where: {
+      userId,
+    },
+    data: {
+      name,
+      email,
+      cellphone,
+      authUser: {
+        update: {
+          username,
+          password: password
+            ? new AuthUser(undefined, '', password, false).getPassword()
+            : undefined,
+          rolId: newRol?.rolId,
+        },
+      },
+    },
+  });
+
+  // If updated
+  if (updatedUser.status === 200) {
+    // Recover data
+    const userAuthRecoverData = await gateway.loadOne(AUTH_TABLE, {
+      where: {
+        authUserId: updatedUser.body.authUserId,
+      },
+      include: {
+        rol: true,
+        user: true,
+      },
+    });
+
+    // Format data
+    const userAuthRecoverDataFromatted = {
+      username: userAuthRecoverData.username,
+      rol: userAuthRecoverData.rol.key,
+      ...userAuthRecoverData.user,
+    };
+    return response.success(
+      200,
+      'User updated successfully.',
+      userAuthRecoverDataFromatted
+    );
   }
 
   // Return response
-  return response.success(200, 'User updated successfully.', {});
+  return updatedUser;
 }
 
 // Remove by id
-async function removeUserCase(id) {
-  // Delete gateway data
-  const deletedUser = await gateway.remove(TABLE, id);
+async function removeUserCase(userId) {
+  // Get authUserId
+  const user = await gateway.loadOne(TABLE, {
+    where: {
+      userId,
+    },
+  });
 
   // Check if user exist
-  if (!deletedUser) {
+  if (!user) {
     // Return response
-    return response.success(404, 'User no exist.', {});
+    return response.success(404, 'User not exist.', {});
   }
+
+  // Delete gateway data
+  const deletedUser = await gateway.remove(AUTH_TABLE, {
+    where: {
+      authUserId: user.authUserId,
+    },
+  });
+  console.log(deletedUser);
 
   // Return response
   return response.success(200, 'User deleted successfully.', {});

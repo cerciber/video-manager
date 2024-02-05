@@ -26,6 +26,7 @@ module.exports = () => {
     get: (...params) => general('get', ...params),
     post: (...params) => general('post', ...params),
     put: (...params) => general('put', ...params),
+    patch: (...params) => general('patch', ...params),
     delete: (...params) => general('delete', ...params),
   };
 };

@@ -11,12 +11,11 @@ const {
   validate,
 } = require('@src/adapters/controllers/validation/validationController');
 const {
-  validateNonEmptyString,
-  validateType,
   validateSchema,
-  validateObjectKeys,
   validatePositiveIntegerString,
   validateStringInOptions,
+  validateStringOrUndefinedInOptions,
+  validateObjectWithMinKeys,
 } = require('@src/adapters/controllers/validation/validationFunctions');
 
 // List data
@@ -103,19 +102,31 @@ async function addUserController(body) {
 // Update by id
 async function updateUserController(params, body) {
   // Get input
-  const { id } = params;
-  const { user } = body;
+  const { userId } = params;
+  const user = body;
 
   // Validate input
   const inputValidation = validate([
-    [validateType, ['string', id], 'Param id not is an string type.'],
-    [validateNonEmptyString, [id], 'Param id is an empty string value.'],
     [
-      validateObjectKeys,
-      [body, ['user']],
-      'Body is not an key object type with specific keys.',
+      validatePositiveIntegerString,
+      [userId],
+      'Param userId not is an positive integer string type.',
     ],
-    [validateSchema, ['User', user], 'User schema not have correct structure.'],
+    [
+      validateObjectWithMinKeys,
+      [user, 1],
+      "UserAdminSiginUpNoIdOptional schema can't be empty.",
+    ],
+    [
+      validateSchema,
+      ['UserAdminSiginUpNoIdOptional', user],
+      'Schema not have UserAdminSiginUpNoIdOptional structure.',
+    ],
+    [
+      validateStringOrUndefinedInOptions,
+      [user.rol, ['admin', 'common']],
+      'User rol field is not a valid rol.',
+    ],
   ]);
 
   // Return incorrect validation input
@@ -128,7 +139,15 @@ async function updateUserController(params, body) {
   }
 
   // Apply bussiness logic
-  const updateUserResponse = await updateUserCase(id, user);
+  const updateUserResponse = await updateUserCase(
+    Number(userId),
+    user.username,
+    user.rol,
+    user.password,
+    user.name,
+    user.email,
+    user.cellphone
+  );
 
   // Return output
   return updateUserResponse;
@@ -137,12 +156,15 @@ async function updateUserController(params, body) {
 // Remove by id
 async function removeUserController(params) {
   // Get input
-  const { id } = params;
+  const { userId } = params;
 
   // Validate input
   const inputValidation = validate([
-    [validateType, ['string', id], 'Param id not is an string type.'],
-    [validateNonEmptyString, [id], 'Param id is an empty string value.'],
+    [
+      validatePositiveIntegerString,
+      [userId],
+      'Param userId not is an positive integer string type.',
+    ],
   ]);
 
   // Return incorrect validation input
@@ -155,7 +177,7 @@ async function removeUserController(params) {
   }
 
   // Apply bussiness logic
-  const deleteUserResponse = await removeUserCase(id);
+  const deleteUserResponse = await removeUserCase(Number(userId));
 
   // Return correct validation output
   return deleteUserResponse;

@@ -350,6 +350,67 @@ function validateStringInOptions(value, options) {
   }
 }
 
+// Validate string in options
+function validateStringOrUndefinedInOptions(value, options) {
+  try {
+    if (!options.includes(value) && value !== undefined) {
+      throw new Error(
+        `Expected one of the following options: ${options.join(', ')} or undefined, but received '${value}'`
+      );
+    }
+
+    return {
+      valid: true,
+      errors: [],
+      expected: `One of: ${options.join(', ')} or undefined`,
+      obtained: value,
+    };
+  } catch (error) {
+    return {
+      valid: false,
+      errors: [
+        {
+          message: error.message,
+          stack: error.stack,
+        },
+      ],
+      expected: `One of: ${options.join(', ')}`,
+      obtained: value,
+    };
+  }
+}
+
+function validateObjectWithMinKeys(obj, minKeys) {
+  try {
+    const keys = Object.keys(obj);
+
+    if (keys.length < minKeys) {
+      throw new Error(
+        `Expected object to have at least ${minKeys} key(s), but received ${keys.length}`
+      );
+    }
+
+    return {
+      valid: true,
+      errors: [],
+      expected: `Object with at least ${minKeys} key(s)`,
+      obtained: keys,
+    };
+  } catch (error) {
+    return {
+      valid: false,
+      errors: [
+        {
+          message: error.message,
+          stack: error.stack,
+        },
+      ],
+      expected: `Object with at least ${minKeys} key(s)`,
+      obtained: {},
+    };
+  }
+}
+
 // Exports
 module.exports = {
   validateSchema,
@@ -362,4 +423,6 @@ module.exports = {
   validateRegex,
   validatePositiveIntegerString,
   validateStringInOptions,
+  validateStringOrUndefinedInOptions,
+  validateObjectWithMinKeys,
 };

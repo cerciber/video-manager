@@ -30,6 +30,9 @@ const router = require('@src/frameworks/web/express/router')();
  *                   properties:
  *                     body:
  *                       $ref: '#/components/schemas/UsersSiginUp'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
  *       500:
  *         allOf:
  *           - $ref: '#/components/responses/500'
@@ -68,6 +71,9 @@ router.get(paths.users.path, async (req, res) => {
  *       400:
  *         allOf:
  *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
  *       404:
  *         allOf:
  *           - $ref: '#/components/responses/404'
@@ -99,9 +105,18 @@ router.get(`${paths.users.path}/:userId`, async (req, res) => {
  *       201:
  *         allOf:
  *           - $ref: '#/components/responses/201'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/UserSiginUp'
  *       400:
  *         allOf:
  *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
  *       409:
  *         allOf:
  *           - $ref: '#/components/responses/409'
@@ -115,15 +130,15 @@ router.post(paths.users.path, async (req, res) => {
 
 /**
  * @swagger
- * ${users}/{id}:
- *   put:
+ * ${users}/{userId}:
+ *   patch:
  *     tags:
  *       - Users
- *     summary: Update user by ID
- *     description: Updates an existing user with the provided data.
+ *     summary: Update user by user Id
+ *     description: Update an existing user with the provided data.
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
@@ -133,22 +148,36 @@ router.post(paths.users.path, async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserSiginUp'
+ *             $ref: '#/components/schemas/UserAdminSiginUpNoIdOptional'
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         allOf:
  *           - $ref: '#/components/responses/200'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/UserSiginUp'
  *       400:
  *         allOf:
  *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
  *       404:
  *         allOf:
  *           - $ref: '#/components/responses/404'
+ *       409:
+ *         allOf:
+ *           - $ref: '#/components/responses/409'
  *       500:
  *         allOf:
  *           - $ref: '#/components/responses/500'
  */
-router.put(`${paths.users.path}/:id`, async (req, res) => {
+router.patch(`${paths.users.path}/:userId`, async (req, res) => {
   return sendResponse(
     req,
     res,
@@ -158,7 +187,7 @@ router.put(`${paths.users.path}/:id`, async (req, res) => {
 
 /**
  * @swagger
- * ${users}/{id}:
+ * ${users}/{userId}:
  *   delete:
  *     tags:
  *       - Users
@@ -166,11 +195,13 @@ router.put(`${paths.users.path}/:id`, async (req, res) => {
  *     description: Deletes an existing user based on the provided ID.
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
  *         description: ID of the user to delete.
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         allOf:
@@ -178,6 +209,9 @@ router.put(`${paths.users.path}/:id`, async (req, res) => {
  *       400:
  *         allOf:
  *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
  *       404:
  *         allOf:
  *           - $ref: '#/components/responses/404'
@@ -185,7 +219,7 @@ router.put(`${paths.users.path}/:id`, async (req, res) => {
  *         allOf:
  *           - $ref: '#/components/responses/500'
  */
-router.delete(`${paths.users.path}/:id`, async (req, res) => {
+router.delete(`${paths.users.path}/:userId`, async (req, res) => {
   return sendResponse(req, res, await removeUserController(req.params));
 });
 

@@ -28,7 +28,7 @@ model PathKeys {
 
 model AuthUsers {
   authUserId  Int        @default(autoincrement()) @id
-  rol         Rols       @relation(fields: [rolId], references: [rolId])
+  rol         Rols       @relation(fields: [rolId], references: [rolId], onDelete: Cascade)
   rolId       Int
   username    String     @unique
   password    String
@@ -37,7 +37,7 @@ model AuthUsers {
 
 model Users {
   userId      Int        @default(autoincrement()) @id
-  authUser    AuthUsers  @relation(fields: [authUserId], references: [authUserId])
+  authUser    AuthUsers  @relation(fields: [authUserId], references: [authUserId], onDelete: Cascade)
   authUserId  Int        @unique
   name        String    
   email       String     @unique
@@ -49,7 +49,7 @@ model Users {
 
 model Videos {
   videoId           Int        @default(autoincrement()) @id
-  user              Users      @relation(fields: [userId], references: [userId])
+  user              Users      @relation(fields: [userId], references: [userId], onDelete: Cascade)
   userId            Int
   title             String    
   description       String
@@ -63,7 +63,7 @@ model Videos {
 
 model Permissions {
   permissionId        Int        @default(autoincrement()) @id
-  rol                 Rols       @relation(fields: [rolId], references: [rolId])
+  rol                 Rols       @relation(fields: [rolId], references: [rolId], onDelete: Cascade)
   rolId               Int
   permissionMethods   PermissionMethods[]
   permissionPathKeys  PermissionPathKeys[]
@@ -71,33 +71,33 @@ model Permissions {
 
 model PermissionMethods {
   permissionMethodId    Int           @default(autoincrement()) @id
-  permission            Permissions   @relation(fields: [permissionId], references: [permissionId])
+  permission            Permissions   @relation(fields: [permissionId], references: [permissionId], onDelete: Cascade)
   permissionId          Int
-  method                Methods       @relation(fields: [methodId], references: [methodId])
+  method                Methods       @relation(fields: [methodId], references: [methodId], onDelete: Cascade)
   methodId              Int
 }
 
 model PermissionPathKeys {
   permissionPathKeysId    Int           @default(autoincrement()) @id
-  permission              Permissions   @relation(fields: [permissionId], references: [permissionId])
+  permission              Permissions   @relation(fields: [permissionId], references: [permissionId], onDelete: Cascade)
   permissionId            Int
-  pathKey                 PathKeys      @relation(fields: [pathKeyId], references: [pathKeyId])
+  pathKey                 PathKeys      @relation(fields: [pathKeyId], references: [pathKeyId], onDelete: Cascade)
   pathKeyId               Int
 }
 
 model Likes {
-  user        Users      @relation(fields: [userId], references: [userId])
+  user        Users      @relation(fields: [userId], references: [userId], onDelete: Cascade)
   userId      Int
-  video       Videos     @relation(fields: [videoId], references: [videoId])
+  video       Videos     @relation(fields: [videoId], references: [videoId], onDelete: Cascade)
   videoId     Int
   @@id([userId, videoId])
 }
 
 model Comments {
   commentId         Int        @default(autoincrement()) @id
-  user              Users      @relation(fields: [userId], references: [userId])
+  user              Users      @relation(fields: [userId], references: [userId], onDelete: Cascade)
   userId            Int
-  video             Videos     @relation(fields: [videoId], references: [videoId])
+  video             Videos     @relation(fields: [videoId], references: [videoId], onDelete: Cascade)
   videoId           Int
   comment           String
   publicationDate   DateTime   @default(now()) @db.Timestamp()
