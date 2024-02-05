@@ -14,7 +14,8 @@ const router = require('@src/frameworks/web/express/router')();
  *     tags:
  *       - Auth
  *     summary: Authenticate user on system.
- *     description: Validate user Authentication.
+ *     description:
+ *       Validate user Authentication.<br/><br/><b>Admin</b><br/>- <b>username:</b>&nbsp;admin1<br/>- <b>password:</b>&nbsp;123456789<br/><br/><b>Common</b><br/>- <b>username:</b>&nbsp;common1<br/>- <b>password:</b>&nbsp;123456789
  *     requestBody:
  *       required: true
  *       content:

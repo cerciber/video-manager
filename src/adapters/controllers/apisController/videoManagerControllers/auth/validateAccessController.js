@@ -6,11 +6,9 @@ const {
 } = require('@src/application/videoManagerApplication/authAccessCases');
 const {
   validate,
-  validateByStatus,
 } = require('@src/adapters/controllers/validation/validationController');
 const {
   validateNonEmptyString,
-  validateResponse,
   validateType,
   validateRegex,
 } = require('@src/adapters/controllers/validation/validationFunctions');
@@ -45,34 +43,7 @@ async function validateAccessController(basePath, method, headers) {
 
   // Check if path not exist or is public
   if (pathDataResponse.status !== 401) {
-    // Validate output
-    const outputValidation = validateByStatus(pathDataResponse.status, {
-      200: [
-        [
-          validateResponse,
-          [200, pathDataResponse, {}],
-          `Response not have correct structure.`,
-        ],
-      ],
-      404: [
-        [
-          validateResponse,
-          [404, pathDataResponse, {}],
-          `Response not have correct structure.`,
-        ],
-      ],
-    });
-
-    // Return incorrect validation output
-    if (!outputValidation.valid) {
-      return response.error(
-        500,
-        outputValidation.badMessage,
-        outputValidation.details
-      );
-    }
-
-    // Return correct validation output
+    // Return output
     return pathDataResponse;
   }
 
@@ -81,17 +52,17 @@ async function validateAccessController(basePath, method, headers) {
     [
       validateType,
       ['string', authorization],
-      'Access denied. Header authorization is not an string.',
+      'Access denied. Token not provided. Header authorization is not an string.',
     ],
     [
       validateNonEmptyString,
       [authorization],
-      'Access denied. Header authorization is an empty string value.',
+      'Access denied. Token not provided. Header authorization is an empty string value.',
     ],
     [
       validateRegex,
       [BEARER_REGEX, authorization],
-      'Access denied. Header authorization is not in a Bearer token from.',
+      'Access denied. Token not provided. Header authorization is not in a Bearer token from.',
     ],
   ]);
 
@@ -111,34 +82,7 @@ async function validateAccessController(basePath, method, headers) {
     authorization.split(BEARER_REGEX)[1]
   );
 
-  // Validate output
-  const outputValidation = validateByStatus(validateAccessResponse.status, {
-    200: [
-      [
-        validateResponse,
-        [200, validateAccessResponse, { tokenPayload: 'TokenPayload' }],
-        `Response not have correct structure.`,
-      ],
-    ],
-    401: [
-      [
-        validateResponse,
-        [401, validateAccessResponse, {}],
-        `Response not have correct structure.`,
-      ],
-    ],
-  });
-
-  // Return incorrect validation output
-  if (!outputValidation.valid) {
-    return response.error(
-      500,
-      outputValidation.badMessage,
-      outputValidation.details
-    );
-  }
-
-  // Return correct validation output
+  // Return output
   return validateAccessResponse;
 }
 

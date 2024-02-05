@@ -24,9 +24,22 @@ module.exports = {
       name: 'Auth',
       description: 'Auth requests.',
     },
+    {
+      name: 'Users',
+      description: 'Users requests.',
+    },
   ],
   components: {
     schemas: {},
     responses: {},
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Video-Manager-Authorization',
+        in: 'header',
+      },
+    },
   },
 };

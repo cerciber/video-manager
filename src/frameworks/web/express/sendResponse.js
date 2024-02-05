@@ -3,8 +3,12 @@ const logger = require('@src/frameworks/logger/loggerCaller');
 
 // Format message
 function formatMessage(message) {
-  let newMessage = message;
+  let newMessage = message.trim();
   newMessage = newMessage.charAt(0).toUpperCase() + newMessage.slice(1);
+  newMessage = newMessage.replace(
+    /(?:^|\.\s+)([a-z])/g,
+    (match, char) => `. ${char.toUpperCase()}`
+  );
   if (newMessage.charAt(newMessage.length - 1) !== '.') {
     newMessage += '.';
   }
@@ -42,7 +46,9 @@ module.exports = (req, res, body) => {
     // Send response
     res.status(body.status).send({
       status: body.status,
-      message: formatMessage(body?.body?.errors?.[0].message ?? body.message),
+      message: formatMessage(
+        `${body.message} ${body?.body?.errors?.[0].message ?? ''}`
+      ),
       error: body.error,
       body: {},
     });

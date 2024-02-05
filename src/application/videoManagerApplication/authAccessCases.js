@@ -79,7 +79,7 @@ async function validateAccessCase(basePath, method, token) {
   }
 
   // Check if token have id
-  if (!payload.id) {
+  if (!payload.authUserId) {
     // Return response
     return response.success(
       401,
@@ -89,8 +89,30 @@ async function validateAccessCase(basePath, method, token) {
   }
 
   // Get gateway data
-  const gatewayUserAuth = await gateway.loadAll(AUTH_USERS_TABLE, {
-    id: payload.id,
+  const gatewayUserAuth = await gateway.loadMany(AUTH_USERS_TABLE, {
+    where: {
+      authUserId: payload.authUserId,
+    },
+    include: {
+      rol: {
+        include: {
+          permissions: {
+            include: {
+              permissionMethods: {
+                include: {
+                  method: true,
+                },
+              },
+              permissionPathKeys: {
+                include: {
+                  pathKey: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
 
   // Check if user was found
@@ -104,7 +126,7 @@ async function validateAccessCase(basePath, method, token) {
   }
 
   // Get authorization
-  const { rol } = gatewayUserAuth;
+  const { rol } = gatewayUserAuth[0];
 
   // Check if user has authorization configuration
   if (!rol) {

@@ -2,7 +2,7 @@
 const database = require('@src/frameworks/DB/database/database');
 const response = require('@src/adapters/presenters/response');
 
-async function loadAll(tableName, parameters) {
+async function loadMany(tableName, parameters) {
   // Find all data
   const register = await database[tableName].findMany(parameters);
   return register;
@@ -49,7 +49,7 @@ async function startTransaction(callback) {
 
 // Exports
 module.exports = {
-  loadAll,
+  loadMany,
   loadOne,
   saveOne,
   update,

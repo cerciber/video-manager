@@ -10,7 +10,7 @@ const TABLE = 'authUsers';
 // Get by id
 async function signinUserAuthCase(username, password) {
   // Get gateway data
-  const gatewayUserAuth = await gateway.loadAll(TABLE, {
+  const gatewayUserAuth = await gateway.loadMany(TABLE, {
     where: { username },
   });
 
@@ -35,7 +35,9 @@ async function signinUserAuthCase(username, password) {
   }
 
   // Generate token
-  const tokenSchema = new Auth().generateToken({ id: gatewayUserAuth[0].id });
+  const tokenSchema = new Auth().generateToken({
+    authUserId: gatewayUserAuth[0].authUserId,
+  });
 
   // Return response
   return response.success(200, 'User Auth retrieved successfully.', {
@@ -81,7 +83,7 @@ async function signupUserAuthCase(username, password, name, email, cellphone) {
       },
     });
 
-    // Fromat data
+    // Format data
     const userAuthRecoverDataFromatted = {
       username: userAuthRecoverData.username,
       rol: userAuthRecoverData.rol.key,

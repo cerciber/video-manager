@@ -284,6 +284,42 @@ function validateRegex(regexPattern, value) {
   }
 }
 
+// Validate positive integer string
+function validatePositiveIntegerString(value) {
+  try {
+    const integerValue = Number(value);
+
+    if (
+      Number.isNaN(integerValue) ||
+      integerValue < 0 ||
+      !Number.isInteger(integerValue)
+    ) {
+      throw new Error(
+        `Expected a positive integer string, but received ${typeof value}`
+      );
+    }
+
+    return {
+      valid: true,
+      errors: [],
+      expected: 'Positive integer string',
+      obtained: value,
+    };
+  } catch (error) {
+    return {
+      valid: false,
+      errors: [
+        {
+          message: error.message,
+          stack: error.stack,
+        },
+      ],
+      expected: 'Positive integer string',
+      obtained: value,
+    };
+  }
+}
+
 // Exports
 module.exports = {
   validateSchema,
@@ -294,4 +330,5 @@ module.exports = {
   validateNonArrayObject,
   validateObjectKeys,
   validateRegex,
+  validatePositiveIntegerString,
 };
