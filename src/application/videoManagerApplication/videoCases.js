@@ -2,7 +2,7 @@
 const gateway = require('@src/adapters/gateways/dbGateway/dbGateway');
 const response = require('@src/adapters/presenters/response');
 
-// Define table users
+// Define tables videos and users
 const TABLE = 'videos';
 const USER_TABLE = 'users';
 
