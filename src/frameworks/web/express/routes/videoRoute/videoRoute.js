@@ -5,6 +5,7 @@ const {
   getVideoByIdController,
   addVideoController,
   updateVideoController,
+  removeVideoController,
 } = require('@src/adapters/controllers/apisController/videoManagerControllers/video/videoController');
 const paths = require('@src/utils/statics/paths');
 const router = require('@src/frameworks/web/express/router')();
@@ -182,6 +183,44 @@ router.patch(`${paths.videos.path}/:videoId`, async (req, res) => {
     res,
     await updateVideoController(req.params, req.body)
   );
+});
+
+/**
+ * @swagger
+ * ${videos}/{videoId}:
+ *   delete:
+ *     tags:
+ *       - Videos
+ *     summary: Delete video by ID
+ *     description: Deletes an existing video based on the provided ID.
+ *     parameters:
+ *       - in: path
+ *         name: videoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the video to delete.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *       400:
+ *         allOf:
+ *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       404:
+ *         allOf:
+ *           - $ref: '#/components/responses/404'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.delete(`${paths.videos.path}/:videoId`, async (req, res) => {
+  return sendResponse(req, res, await removeVideoController(req.params));
 });
 
 // Exports

@@ -5,6 +5,7 @@ const {
   getVideoByIdCase,
   addVideoCase,
   updateVideoCase,
+  removeVideoCase,
 } = require('@src/application/videoManagerApplication/videoCases');
 const {
   validate,
@@ -125,7 +126,7 @@ async function updateVideoController(params, body) {
   }
 
   // Apply bussiness logic
-  const updateUserResponse = await updateVideoCase(
+  const updateVideoResponse = await updateVideoCase(
     Number(videoId),
     video.userId,
     video.title,
@@ -135,7 +136,37 @@ async function updateVideoController(params, body) {
   );
 
   // Return output
-  return updateUserResponse;
+  return updateVideoResponse;
+}
+
+// Remove by id
+async function removeVideoController(params) {
+  // Get input
+  const { videoId } = params;
+
+  // Validate input
+  const inputValidation = validate([
+    [
+      validatePositiveIntegerString,
+      [videoId],
+      'Param videoId not is an positive integer string type.',
+    ],
+  ]);
+
+  // Return incorrect validation input
+  if (!inputValidation.valid) {
+    return response.error(
+      400,
+      inputValidation.badMessage,
+      inputValidation.details
+    );
+  }
+
+  // Apply bussiness logic
+  const deleteVideoResponse = await removeVideoCase(Number(videoId));
+
+  // Return correct validation output
+  return deleteVideoResponse;
 }
 
 // Exports
@@ -144,4 +175,5 @@ module.exports = {
   getVideoByIdController,
   addVideoController,
   updateVideoController,
+  removeVideoController,
 };

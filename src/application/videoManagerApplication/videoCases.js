@@ -345,10 +345,37 @@ async function updateVideoCase(
   return updatedVideo;
 }
 
+// Remove by id
+async function removeVideoCase(videoId) {
+  // Get video
+  const video = await gateway.loadOne(TABLE, {
+    where: {
+      videoId,
+    },
+  });
+
+  // Check if video exist
+  if (!video) {
+    // Return response
+    return response.success(404, 'Video not exist.', {});
+  }
+
+  // Delete gateway data
+  await gateway.remove(TABLE, {
+    where: {
+      videoId,
+    },
+  });
+
+  // Return response
+  return response.success(200, 'Video deleted successfully.', {});
+}
+
 // Exports
 module.exports = {
   getVideoslistCase,
   getVideoByIdCase,
   addVideoCase,
   updateVideoCase,
+  removeVideoCase,
 };
