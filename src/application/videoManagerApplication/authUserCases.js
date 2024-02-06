@@ -82,7 +82,7 @@ async function signupUserAuthCase(username, password, name, email, cellphone) {
     // Recover data
     const userAuthRecoverData = await gateway.loadOne(TABLE, {
       where: {
-        authUserId: gatewayUserAuthAddedResponse.body.savedRegister.authUserId,
+        authUserId: gatewayUserAuthAddedResponse.body.authUserId,
       },
       include: {
         rol: true,

@@ -29,8 +29,19 @@ app.use(pathNoFoundMiddleware);
 app.use(errorMiddleware);
 
 // Listen
-app.listen(config.frameworks.web.express.port, () => {
-  const message = `Server running.`;
-  const content = `URL: ${config.frameworks.web.express.url}.\nEnviroment: ${config.enviroment}.`;
-  logger.info(message, logger.types.SYSTEM, 'express', 'runServer', content);
-});
+let server;
+const listen = () => {
+  server = app.listen(config.frameworks.web.express.port, () => {
+    const message = `Server running.`;
+    const content = `URL: ${config.frameworks.web.express.url}.\nEnviroment: ${config.enviroment}.`;
+    logger.info(message, logger.types.SYSTEM, 'express', 'runServer', content);
+  });
+};
+
+// close
+const close = () => {
+  server.close();
+};
+
+// Exports
+module.exports = { express: app, listen, close };

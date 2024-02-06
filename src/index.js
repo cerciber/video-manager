@@ -5,4 +5,4 @@ require('module-alias/register');
 require('dotenv').config();
 
 // Start express server
-require('@src/frameworks/web/express/express');
+require('@src/frameworks/web/express/express').listen();

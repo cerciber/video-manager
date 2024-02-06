@@ -58,39 +58,55 @@ function validateSchema(name, schema) {
 }
 
 // Validate response swwagger schema
-function validateResponse(code, schema, body) {
-  if (!swaggerData.components.responses[code]) {
-    throw new Error(`Response schema ${code} no exist`);
-  }
-
-  const responseSchema = _.cloneDeep(
-    swaggerData.components.responses[code].content['application/json'].schema
-  );
-  if (body) {
-    Object.entries(body).forEach(([key, value]) => {
-      if (!responseSchema.properties.body.properties) {
-        responseSchema.properties.body.properties = {};
-      }
-      responseSchema.properties.body.properties[key] =
-        swaggerData.components.schemas[value];
-    });
-
-    if (Object.keys(body).length === 0) {
-      const emptyValidationResult = validateEmptyObject(schema.body);
-      if (!emptyValidationResult.valid) {
-        return emptyValidationResult;
-      }
-    }
-  }
-
-  const result = validator.validate(schema, responseSchema, true, false, true);
+function validateResponse(code, schema, schemaName) {
   try {
+    if (!swaggerData.components.responses[code]) {
+      throw new Error(`Response schema ${code} no exist`);
+    }
+
+    if (
+      !swaggerData.components.schemas[schemaName] &&
+      schemaName !== undefined
+    ) {
+      throw new Error(`Body schema ${schemaName} no exist`);
+    }
+
+    const responseSchema = _.cloneDeep(
+      swaggerData.components.responses[code].content['application/json'].schema
+    );
+    if (schemaName) {
+      responseSchema.properties.body =
+        swaggerData.components.schemas[schemaName];
+    }
+
+    const result = validator.validate(
+      schema,
+      responseSchema,
+      true,
+      false,
+      true
+    );
+
     if (result.valid && schema.status !== code) {
       throw new Error(
         `Expected a status value of ${code}, but received a status value of ${schema.status}`
       );
     }
+
+    return {
+      valid: result.valid,
+      errors:
+        result.errors?.map((error) => {
+          return {
+            message: error.message,
+            stack: error.stack,
+          };
+        }) || [],
+      expected: responseSchema,
+      obtained: schema,
+    };
   } catch (error) {
+    console.log(error);
     return {
       valid: false,
       errors: [
@@ -99,23 +115,10 @@ function validateResponse(code, schema, body) {
           stack: error.stack,
         },
       ],
-      expected: responseSchema,
+      expected: schemaName,
       obtained: schema,
     };
   }
-
-  return {
-    valid: result.valid,
-    errors:
-      result.errors?.map((error) => {
-        return {
-          message: error.message,
-          stack: error.stack,
-        };
-      }) || [],
-    expected: responseSchema,
-    obtained: schema,
-  };
 }
 
 // Validate primitive data type
