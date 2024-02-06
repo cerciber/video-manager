@@ -10,6 +10,8 @@ const {
   removeVideoController,
   updateMyVideoController,
   removeMyVideoController,
+  getPrivateVideoslistController,
+  getPublicVideoslistController,
 } = require('@src/adapters/controllers/apisController/videoManagerControllers/video/videoController');
 const paths = require('@src/utils/statics/paths');
 const router = require('@src/frameworks/web/express/router')();
@@ -465,6 +467,66 @@ router.get(`${paths.topVideos.path}/:numTop`, async (req, res) => {
     res,
     await getTopRatedVideoslistController(req.params)
   );
+});
+
+/**
+ * @swagger
+ * ${privateVideos}:
+ *   get:
+ *     tags:
+ *       - Videos
+ *     summary: Get all private videos
+ *     description: Returns a list of all private videos.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/Videos'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.get(paths.privateVideos.path, async (req, res) => {
+  return sendResponse(req, res, await getPrivateVideoslistController());
+});
+
+/**
+ * @swagger
+ * ${publicVideos}:
+ *   get:
+ *     tags:
+ *       - Videos
+ *     summary: Get all public videos
+ *     description: Returns a list of all private videos.
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/Videos'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.get(paths.publicVideos.path, async (req, res) => {
+  return sendResponse(req, res, await getPublicVideoslistController());
 });
 
 // Exports

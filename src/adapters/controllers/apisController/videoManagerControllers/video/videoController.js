@@ -10,6 +10,8 @@ const {
   updateMyVideoCase,
   removeMyVideoCase,
   getTopRatedVideoslistCase,
+  getPrivateVideoslistCase,
+  getPublicVideoslistCase,
 } = require('@src/application/videoManagerApplication/videoCases');
 const {
   validate,
@@ -24,6 +26,24 @@ const {
 async function getVideoslistController() {
   // Apply bussiness logic
   const usersResponse = await getVideoslistCase();
+
+  // Return correct validation output
+  return usersResponse;
+}
+
+// List private data
+async function getPrivateVideoslistController() {
+  // Apply bussiness logic
+  const usersResponse = await getPrivateVideoslistCase();
+
+  // Return correct validation output
+  return usersResponse;
+}
+
+// List private data
+async function getPublicVideoslistController() {
+  // Apply bussiness logic
+  const usersResponse = await getPublicVideoslistCase();
 
   // Return correct validation output
   return usersResponse;
@@ -335,4 +355,6 @@ module.exports = {
   updateMyVideoController,
   removeMyVideoController,
   getTopRatedVideoslistController,
+  getPrivateVideoslistController,
+  getPublicVideoslistController,
 };
