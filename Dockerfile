@@ -18,5 +18,5 @@ EXPOSE 3001
 
 # Command to run the application
 RUN npm run prisma:generate
-RUN npm run prisma:reset
+# RUN npm run prisma:reset
 CMD ["node", "src/index.js"]
