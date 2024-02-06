@@ -36,10 +36,14 @@ async function addLikeController(body) {
   }
 
   // Apply bussiness logic
-  const addVideoResponse = await addLikeCase(like.userId, like.videoId);
+  const addLikeResponse = await addLikeCase(like.userId, like.videoId);
+
+  if (addLikeResponse.status === 201) {
+    return response.success(201, 'Like added successfully.', {});
+  }
 
   // Return output
-  return addVideoResponse;
+  return addLikeResponse;
 }
 
 // Remove by id
