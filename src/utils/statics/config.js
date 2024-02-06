@@ -21,6 +21,7 @@ module.exports = {
   application: {
     jwtSectetKey: process.env.JWT_SECRET_KEY || 'SECRET_KEY',
     jwtDuration: process.env.JWT_DURATION || '1h',
+    testAdminToken: process.env.TEST_ADMIN_TOKEN || '',
   },
   entities: {
     passwordEncryptSaltRounds:

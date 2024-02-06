@@ -5,4 +5,6 @@ require('module-alias/register');
 require('dotenv').config();
 
 // Start express server
-require('@src/frameworks/web/express/express').listen();
+const express = require('@src/frameworks/web/express/express');
+
+express.listen();

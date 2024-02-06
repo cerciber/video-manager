@@ -106,7 +106,6 @@ function validateResponse(code, schema, schemaName) {
       obtained: schema,
     };
   } catch (error) {
-    console.log(error);
     return {
       valid: false,
       errors: [

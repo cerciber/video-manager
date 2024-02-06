@@ -248,7 +248,7 @@ async function updateMyVideoController(params, body) {
     ],
     [
       validateSchema,
-      ['VideoNoIdNoUser', video],
+      ['VideoNoIdNoUserOptional', video],
       'Schema not have VideoNoIdNoUserOptional structure.',
     ],
   ]);

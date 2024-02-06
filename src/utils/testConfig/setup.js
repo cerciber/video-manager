@@ -1,16 +1,11 @@
+require('module-alias/register');
+require('dotenv').config();
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-
-// Set import alias
-require('module-alias/register');
-
-// Add enviroment variables
-require('dotenv').config();
-
-// Express server
 const { listen } = require('@src/frameworks/web/express/express');
 
 module.exports = async () => {
+  // Resdet database
   try {
     // eslint-disable-next-line no-console
     console.log('Reset database in process...');
@@ -21,6 +16,8 @@ module.exports = async () => {
     // eslint-disable-next-line no-console
     console.log(error);
   }
+
+  // Listen express
   listen();
   // eslint-disable-next-line no-console
   console.log('Express running.');

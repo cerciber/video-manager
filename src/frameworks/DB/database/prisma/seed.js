@@ -276,6 +276,24 @@ async function main() {
           name: 'Cesar',
           email: 'cesar@gmail.com',
           cellphone: '+573103458235',
+          videos: {
+            create: [
+              {
+                videoId: 5,
+                title: 'Video 5',
+                description: 'Description 5',
+                credits: 'Credit 1, Credit 2',
+                isPrivate: true,
+              },
+              {
+                videoId: 6,
+                title: 'Video 6',
+                description: 'Description 6',
+                credits: 'Credit 1, Credit 2',
+                isPrivate: true,
+              },
+            ],
+          },
         },
       },
     },

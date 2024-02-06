@@ -7,7 +7,7 @@ const {
   validateResponse,
 } = require('@src/adapters/controllers/validation/validationFunctions');
 
-describe(`GET ${paths.authSignIn.path}`, () => {
+describe(`${paths.authSignIn.path}`, () => {
   test('Should autenticate user on system', async () => {
     const response = await request(express)
       .post(paths.authSignIn.path)
