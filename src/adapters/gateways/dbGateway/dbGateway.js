@@ -20,9 +20,7 @@ async function saveOne(tableName, data) {
     const savedRegister = await database[tableName].create(data);
 
     // Return response
-    return response.success(201, 'User registered successfully.', {
-      savedRegister,
-    });
+    return response.success(201, 'Data added successfully.', savedRegister);
   } catch (error) {
     if (error.code === 'P2002') {
       return response.error(
@@ -41,7 +39,7 @@ async function update(tableName, parameters, transaction = database) {
     const register = await transaction[tableName].update(parameters);
 
     // Return response
-    return response.success(200, 'User updated successfully.', register);
+    return response.success(200, 'Data updated successfully.', register);
   } catch (error) {
     if (error.code === 'P2002') {
       return response.error(
@@ -51,7 +49,7 @@ async function update(tableName, parameters, transaction = database) {
       );
     }
     if (error.code === 'P2025') {
-      return response.success(404, 'User not exist.', {});
+      return response.success(404, 'Data not exist.', {});
     }
     throw error;
   }
@@ -63,10 +61,10 @@ async function remove(tableName, parameters, transaction = database) {
     const register = await transaction[tableName].deleteMany(parameters);
 
     // Return response
-    return response.success(200, 'User deleted successfully.', register);
+    return response.success(200, 'Data deleted successfully.', register);
   } catch (error) {
     if (error.code === 'P2025') {
-      return response.success(404, 'User not exist.', {});
+      return response.success(404, 'Data not exist.', {});
     }
     throw error;
   }

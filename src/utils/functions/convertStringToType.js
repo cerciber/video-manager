@@ -7,7 +7,13 @@ function convertToType(value, targetType) {
     return Number(value);
   }
   if (targetType === 'boolean') {
-    return value.toLowerCase() === 'true';
+    return Boolean(value);
+  }
+  if (targetType === 'object') {
+    return Object(value);
+  }
+  if (targetType === 'array') {
+    return Array(value);
   }
   throw new Error(`Tipo no compatible: ${targetType}`);
 }

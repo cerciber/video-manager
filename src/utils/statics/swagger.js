@@ -28,6 +28,10 @@ module.exports = {
       name: 'Users',
       description: 'Users requests.',
     },
+    {
+      name: 'Videos',
+      description: 'Videos requests.',
+    },
   ],
   components: {
     schemas: {},

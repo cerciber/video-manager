@@ -296,6 +296,101 @@ async function main() {
           name: 'Denis',
           email: 'denis@gmail.com',
           cellphone: '+573155348312',
+          videos: {
+            create: [
+              {
+                videoId: 1,
+                title: 'Video 1',
+                description: 'Description 1',
+                credits: 'Credit 1, Credit 2',
+                isPrivate: true,
+              },
+              {
+                videoId: 2,
+                title: 'Video 2',
+                description: 'Description 2',
+                credits: 'Credit 3, Credit 4',
+                isPrivate: false,
+              },
+              {
+                videoId: 3,
+                title: 'Video 3',
+                description: 'Description 3',
+                credits: 'Credit 5, Credit 6',
+                isPrivate: true,
+              },
+              {
+                videoId: 4,
+                title: 'Video 4',
+                description: 'Description 4',
+                credits: 'Credit 7, Credit 8',
+                isPrivate: true,
+              },
+            ],
+          },
+        },
+      },
+    },
+  });
+
+  const authUser3 = new AuthUser(undefined, 'common2', '123456789', false);
+  await prisma.authUsers.create({
+    data: {
+      username: authUser3.username,
+      password: authUser3.getPassword(),
+      rol: {
+        connect: {
+          key: 'common',
+        },
+      },
+      user: {
+        create: {
+          name: 'Carlos',
+          email: 'carlos@gmail.com',
+          cellphone: '+573155435423',
+          likes: {
+            create: [
+              {
+                videoId: 1,
+              },
+              {
+                videoId: 2,
+              },
+            ],
+          },
+        },
+      },
+    },
+  });
+
+  const authUser4 = new AuthUser(undefined, 'common32', '123456789', false);
+  await prisma.authUsers.create({
+    data: {
+      username: authUser4.username,
+      password: authUser4.getPassword(),
+      rol: {
+        connect: {
+          key: 'common',
+        },
+      },
+      user: {
+        create: {
+          name: 'Lucia',
+          email: 'lucia@gmail.com',
+          cellphone: '+573125670978',
+          comments: {
+            create: [
+              {
+                videoId: 2,
+                comment: "Wow, didn't expect that! This video is a wild ride.",
+              },
+              {
+                videoId: 3,
+                comment:
+                  'Random, but awesome! This video brought a smile to my face.',
+              },
+            ],
+          },
         },
       },
     },

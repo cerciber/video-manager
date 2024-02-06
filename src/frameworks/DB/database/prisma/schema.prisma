@@ -54,8 +54,7 @@ model Videos {
   title             String    
   description       String
   credits           String
-  url               String
-  private           Boolean
+  isPrivate         Boolean
   publicationDate   DateTime   @default(now()) @db.Timestamp()
   likes             Likes[]
   comments          Comments[]

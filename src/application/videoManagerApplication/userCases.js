@@ -28,9 +28,7 @@ async function getUserslistCase() {
   });
 
   // Return response
-  return response.success(200, 'Users retrieved successfully.', {
-    users: usersSchema,
-  });
+  return response.success(200, 'Users retrieved successfully.', usersSchema);
 }
 
 // Get by id
@@ -102,7 +100,7 @@ async function addUserCase(username, rol, password, name, email, cellphone) {
     // Recover data
     const userAuthRecoverData = await gateway.loadOne(AUTH_TABLE, {
       where: {
-        authUserId: gatewayUserAuthAddedResponse.body.savedRegister.authUserId,
+        authUserId: gatewayUserAuthAddedResponse.body.authUserId,
       },
       include: {
         rol: true,
@@ -214,12 +212,11 @@ async function removeUserCase(userId) {
   }
 
   // Delete gateway data
-  const deletedUser = await gateway.remove(AUTH_TABLE, {
+  await gateway.remove(AUTH_TABLE, {
     where: {
       authUserId: user.authUserId,
     },
   });
-  console.log(deletedUser);
 
   // Return response
   return response.success(200, 'User deleted successfully.', {});
