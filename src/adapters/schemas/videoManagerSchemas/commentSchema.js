@@ -3,10 +3,13 @@ const _ = require('lodash');
 
 // Exports
 module.exports = _.cloneDeep({
-  CommentNoId: {
-    title: 'CommentNoId',
+  Comment: {
+    title: 'Comment',
     type: 'object',
     properties: {
+      commentId: {
+        type: 'number',
+      },
       userId: {
         type: 'number',
       },
@@ -16,12 +19,17 @@ module.exports = _.cloneDeep({
       comment: {
         type: 'string',
       },
+      publicationDate: {
+        type: 'string',
+      },
     },
     example: {
+      commentId: 1,
       userId: 1,
       videoId: 1,
       comment: 'Excelent.',
+      publicationDate: '2024-02-06T13:44:32.342Z',
     },
-    required: ['userId', 'videoId', 'comment'],
+    required: ['commentId', 'userId', 'videoId', 'comment', 'publicationDate'],
   },
 });

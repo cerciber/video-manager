@@ -3,6 +3,7 @@ const response = require('@src/adapters/presenters/response');
 const {
   addCommentCase,
   removeCommentCase,
+  removeMyCommentCase,
 } = require('@src/application/videoManagerApplication/commentCases');
 const {
   validate,
@@ -76,8 +77,47 @@ async function removeCommentController(params) {
   return deleteCommentResponse;
 }
 
+// Remove by id
+async function removeMyCommentController(params) {
+  // Get input
+  const { commentId, userId } = params;
+
+  // Validate input
+  const inputValidation = validate([
+    [
+      validatePositiveIntegerString,
+      [commentId],
+      'Param commentId not is an positive integer string type.',
+    ],
+    [
+      validatePositiveIntegerString,
+      [userId],
+      'Param userId not is an positive integer string type.',
+    ],
+  ]);
+
+  // Return incorrect validation input
+  if (!inputValidation.valid) {
+    return response.error(
+      400,
+      inputValidation.badMessage,
+      inputValidation.details
+    );
+  }
+
+  // Apply bussiness logic
+  const deleteCommentResponse = await removeMyCommentCase(
+    Number(commentId),
+    Number(userId)
+  );
+
+  // Return correct validation output
+  return deleteCommentResponse;
+}
+
 // Exports
 module.exports = {
   addCommentController,
   removeCommentController,
+  removeMyCommentController,
 };

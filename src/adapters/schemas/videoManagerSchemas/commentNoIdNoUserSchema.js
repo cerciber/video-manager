@@ -3,13 +3,10 @@ const _ = require('lodash');
 
 // Exports
 module.exports = _.cloneDeep({
-  CommentNoId: {
-    title: 'CommentNoId',
+  CommentNoIdNoUser: {
+    title: 'CommentNoIdNoUser',
     type: 'object',
     properties: {
-      userId: {
-        type: 'number',
-      },
       videoId: {
         type: 'number',
       },
@@ -18,10 +15,9 @@ module.exports = _.cloneDeep({
       },
     },
     example: {
-      userId: 1,
       videoId: 1,
       comment: 'Excelent.',
     },
-    required: ['userId', 'videoId', 'comment'],
+    required: ['videoId', 'comment'],
   },
 });

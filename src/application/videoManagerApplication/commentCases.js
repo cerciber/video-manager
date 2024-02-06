@@ -82,8 +82,46 @@ async function removeCommentCase(commentId) {
   return response.success(200, 'Comment deleted successfully.', {});
 }
 
+// Remove own by id
+async function removeMyCommentCase(commentId, userId) {
+  // Get comment
+  const comment = await gateway.loadOne(TABLE, {
+    where: {
+      commentId,
+    },
+  });
+
+  // Check if comment exist
+  if (!comment) {
+    // Return response
+    return response.success(404, 'Comment not exist.', {});
+  }
+
+  // Validate if comment belong to user
+  const commentOwner = await gateway.loadOne(TABLE, {
+    where: {
+      commentId,
+      userId,
+    },
+  });
+  if (!commentOwner) {
+    return response.error(401, 'This comment does not belong to you.', {});
+  }
+
+  // Delete gateway data
+  await gateway.remove(TABLE, {
+    where: {
+      commentId,
+    },
+  });
+
+  // Return response
+  return response.success(200, 'Comment deleted successfully.', {});
+}
+
 // Exports
 module.exports = {
   addCommentCase,
   removeCommentCase,
+  removeMyCommentCase,
 };
