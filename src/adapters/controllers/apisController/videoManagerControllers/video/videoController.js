@@ -6,6 +6,9 @@ const {
   addVideoCase,
   updateVideoCase,
   removeVideoCase,
+  getUserVideoslistCase,
+  updateMyVideoCase,
+  removeMyVideoCase,
 } = require('@src/application/videoManagerApplication/videoCases');
 const {
   validate,
@@ -50,6 +53,36 @@ async function getVideoByIdController(params) {
 
   // Apply bussiness logic
   const videoResponse = await getVideoByIdCase(Number(videoId));
+
+  // Return output
+  return videoResponse;
+}
+
+// Get by id
+async function getVideosByUserIdController(params) {
+  // Get input
+  const { userId } = params;
+
+  // Validate input
+  const inputValidation = validate([
+    [
+      validatePositiveIntegerString,
+      [userId],
+      'Param userId not is an positive integer string type.',
+    ],
+  ]);
+
+  // Return incorrect validation input
+  if (!inputValidation.valid) {
+    return response.error(
+      400,
+      inputValidation.badMessage,
+      inputValidation.details
+    );
+  }
+
+  // Apply bussiness logic
+  const videoResponse = await getUserVideoslistCase(Number(userId));
 
   // Return output
   return videoResponse;
@@ -139,6 +172,59 @@ async function updateVideoController(params, body) {
   return updateVideoResponse;
 }
 
+// Update own by id
+async function updateMyVideoController(params, body) {
+  // Get input
+  const { videoId, userId } = params;
+  const video = body;
+
+  // Validate input
+  const inputValidation = validate([
+    [
+      validatePositiveIntegerString,
+      [videoId],
+      'Param videoId not is an positive integer string type.',
+    ],
+    [
+      validatePositiveIntegerString,
+      [userId],
+      'Param userId not is an positive integer string type.',
+    ],
+    [
+      validateObjectWithMinKeys,
+      [video, 1],
+      "VideoNoIdNoUserOptional schema can't be empty.",
+    ],
+    [
+      validateSchema,
+      ['VideoNoIdNoUser', video],
+      'Schema not have VideoNoIdNoUserOptional structure.',
+    ],
+  ]);
+
+  // Return incorrect validation input
+  if (!inputValidation.valid) {
+    return response.error(
+      400,
+      inputValidation.badMessage,
+      inputValidation.details
+    );
+  }
+
+  // Apply bussiness logic
+  const updateVideoResponse = await updateMyVideoCase(
+    Number(videoId),
+    Number(userId),
+    video.title,
+    video.description,
+    video.credits,
+    video.isPrivate
+  );
+
+  // Return output
+  return updateVideoResponse;
+}
+
 // Remove by id
 async function removeVideoController(params) {
   // Get input
@@ -169,11 +255,52 @@ async function removeVideoController(params) {
   return deleteVideoResponse;
 }
 
+// Remove own by id
+async function removeMyVideoController(params) {
+  // Get input
+  const { videoId, userId } = params;
+
+  // Validate input
+  const inputValidation = validate([
+    [
+      validatePositiveIntegerString,
+      [videoId],
+      'Param videoId not is an positive integer string type.',
+    ],
+    [
+      validatePositiveIntegerString,
+      [userId],
+      'Param userId not is an positive integer string type.',
+    ],
+  ]);
+
+  // Return incorrect validation input
+  if (!inputValidation.valid) {
+    return response.error(
+      400,
+      inputValidation.badMessage,
+      inputValidation.details
+    );
+  }
+
+  // Apply bussiness logic
+  const deleteVideoResponse = await removeMyVideoCase(
+    Number(userId),
+    Number(videoId)
+  );
+
+  // Return correct validation output
+  return deleteVideoResponse;
+}
+
 // Exports
 module.exports = {
   getVideoslistController,
+  getVideosByUserIdController,
   getVideoByIdController,
   addVideoController,
   updateVideoController,
   removeVideoController,
+  updateMyVideoController,
+  removeMyVideoController,
 };

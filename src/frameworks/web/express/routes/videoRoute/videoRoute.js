@@ -2,10 +2,13 @@
 const sendResponse = require('@src/frameworks/web/express/sendResponse');
 const {
   getVideoslistController,
+  getVideosByUserIdController,
   getVideoByIdController,
   addVideoController,
   updateVideoController,
   removeVideoController,
+  updateMyVideoController,
+  removeMyVideoController,
 } = require('@src/adapters/controllers/apisController/videoManagerControllers/video/videoController');
 const paths = require('@src/utils/statics/paths');
 const router = require('@src/frameworks/web/express/router')();
@@ -221,6 +224,204 @@ router.patch(`${paths.videos.path}/:videoId`, async (req, res) => {
  */
 router.delete(`${paths.videos.path}/:videoId`, async (req, res) => {
   return sendResponse(req, res, await removeVideoController(req.params));
+});
+
+/**
+ * @swagger
+ * ${ownVideos}:
+ *   get:
+ *     tags:
+ *       - Videos
+ *     summary: Get my videos
+ *     description: Retrieves my videos based on the provided ID.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/Video'
+ *       400:
+ *         allOf:
+ *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       404:
+ *         allOf:
+ *           - $ref: '#/components/responses/404'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.get(`${paths.ownVideos.path}`, async (req, res) => {
+  return sendResponse(
+    req,
+    res,
+    await getVideosByUserIdController({
+      userId: String(req.tokenPayload.userId),
+    })
+  );
+});
+
+/**
+ * @swagger
+ * ${ownVideos}:
+ *   post:
+ *     tags:
+ *       - Videos
+ *     summary: Add my video
+ *     description: Creates my new video with the provided data.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/VideoNoIdNoUser'
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         allOf:
+ *           - $ref: '#/components/responses/201'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/Video'
+ *       400:
+ *         allOf:
+ *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       409:
+ *         allOf:
+ *           - $ref: '#/components/responses/409'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.post(paths.ownVideos.path, async (req, res) => {
+  return sendResponse(
+    req,
+    res,
+    await addVideoController({
+      ...req.body,
+      userId: req.tokenPayload.userId,
+    })
+  );
+});
+
+/**
+ * @swagger
+ * ${ownVideos}/{videoId}:
+ *   patch:
+ *     tags:
+ *       - Videos
+ *     summary: Update my video by video Id
+ *     description: Update my existing video with the provided data.
+ *     parameters:
+ *       - in: path
+ *         name: videoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the video to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/VideoNoIdNoUserOptional'
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/Video'
+ *       400:
+ *         allOf:
+ *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       404:
+ *         allOf:
+ *           - $ref: '#/components/responses/404'
+ *       409:
+ *         allOf:
+ *           - $ref: '#/components/responses/409'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.patch(`${paths.ownVideos.path}/:videoId`, async (req, res) => {
+  return sendResponse(
+    req,
+    res,
+    await updateMyVideoController(
+      { ...req.params, userId: String(req.tokenPayload.userId) },
+      req.body
+    )
+  );
+});
+
+/**
+ * @swagger
+ * ${ownVideos}/{videoId}:
+ *   delete:
+ *     tags:
+ *       - Videos
+ *     summary: Delete my video by ID
+ *     description: Deletes my existing video based on the provided ID.
+ *     parameters:
+ *       - in: path
+ *         name: videoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the video to delete.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *       400:
+ *         allOf:
+ *           - $ref: '#/components/responses/400'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       404:
+ *         allOf:
+ *           - $ref: '#/components/responses/404'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.delete(`${paths.ownVideos.path}/:videoId`, async (req, res) => {
+  return sendResponse(
+    req,
+    res,
+    await removeMyVideoController({
+      ...req.params,
+      userId: String(req.tokenPayload.userId),
+    })
+  );
 });
 
 // Exports
