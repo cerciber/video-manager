@@ -9,6 +9,7 @@ const {
   getUserVideoslistCase,
   updateMyVideoCase,
   removeMyVideoCase,
+  getTopRatedVideoslistCase,
 } = require('@src/application/videoManagerApplication/videoCases');
 const {
   validate,
@@ -23,6 +24,36 @@ const {
 async function getVideoslistController() {
   // Apply bussiness logic
   const usersResponse = await getVideoslistCase();
+
+  // Return correct validation output
+  return usersResponse;
+}
+
+// List data
+async function getTopRatedVideoslistController(params) {
+  // Get input
+  const { numTop } = params;
+
+  // Validate input
+  const inputValidation = validate([
+    [
+      validatePositiveIntegerString,
+      [numTop],
+      'Param numTop not is an positive integer string type.',
+    ],
+  ]);
+
+  // Return incorrect validation input
+  if (!inputValidation.valid) {
+    return response.error(
+      400,
+      inputValidation.badMessage,
+      inputValidation.details
+    );
+  }
+
+  // Apply bussiness logic
+  const usersResponse = await getTopRatedVideoslistCase(Number(numTop));
 
   // Return correct validation output
   return usersResponse;
@@ -303,4 +334,5 @@ module.exports = {
   removeVideoController,
   updateMyVideoController,
   removeMyVideoController,
+  getTopRatedVideoslistController,
 };

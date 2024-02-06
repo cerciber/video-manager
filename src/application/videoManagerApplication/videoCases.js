@@ -72,6 +72,78 @@ async function getVideoslistCase() {
   return response.success(200, 'Videos retrieved successfully.', videoSchema);
 }
 
+// List top rated data
+async function getTopRatedVideoslistCase(numTop) {
+  // Get gateway data
+  const gatewayVideos = await gateway.loadMany(TABLE, {
+    include: {
+      user: {
+        include: {
+          authUser: true,
+        },
+      },
+      comments: {
+        include: {
+          user: {
+            include: {
+              authUser: true,
+            },
+          },
+        },
+      },
+      likes: {
+        include: {
+          user: {
+            include: {
+              authUser: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      likes: {
+        _count: 'desc',
+      },
+    },
+    take: numTop,
+  });
+
+  // Format data to schema
+  const videoSchema = gatewayVideos.map((video) => {
+    return {
+      videoId: video.videoId,
+      title: video.title,
+      description: video.description,
+      credits: video.credits,
+      isPrivate: video.isPrivate,
+      publicationDate: video.publicationDate,
+      user: {
+        userId: video.user.userId,
+        username: video.user.authUser.username,
+        name: video.user.name,
+      },
+      comments: video.comments.map((comment) => ({
+        commentId: comment.commentId,
+        userId: comment.userId,
+        username: comment.user.authUser.username,
+        name: comment.user.name,
+        comment: comment.comment,
+        publicationDate: comment.publicationDate,
+      })),
+      likes: video.likes.map((like) => ({
+        likeId: like.likeId,
+        userId: like.userId,
+        username: like.user.authUser.username,
+        name: like.user.name,
+      })),
+    };
+  });
+
+  // Return response
+  return response.success(200, 'Videos retrieved successfully.', videoSchema);
+}
+
 // List data
 async function getUserVideoslistCase(userId) {
   // Get gateway data
@@ -596,6 +668,7 @@ async function removeMyVideoCase(userId, videoId) {
 // Exports
 module.exports = {
   getVideoslistCase,
+  getTopRatedVideoslistCase,
   getUserVideoslistCase,
   getVideoByIdCase,
   addVideoCase,

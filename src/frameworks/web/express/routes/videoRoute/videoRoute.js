@@ -2,6 +2,7 @@
 const sendResponse = require('@src/frameworks/web/express/sendResponse');
 const {
   getVideoslistController,
+  getTopRatedVideoslistController,
   getVideosByUserIdController,
   getVideoByIdController,
   addVideoController,
@@ -421,6 +422,48 @@ router.delete(`${paths.ownVideos.path}/:videoId`, async (req, res) => {
       ...req.params,
       userId: String(req.tokenPayload.userId),
     })
+  );
+});
+
+/**
+ * @swagger
+ * ${topVideos}/{numTop}:
+ *   get:
+ *     tags:
+ *       - Videos
+ *     summary: Get top videos
+ *     description: Returns a list of top videos with more likes.
+ *     parameters:
+ *       - in: path
+ *         name: numTop
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Number of videos to retrieve.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         allOf:
+ *           - $ref: '#/components/responses/200'
+ *           - content:
+ *               application/json:
+ *                 schema:
+ *                   properties:
+ *                     body:
+ *                       $ref: '#/components/schemas/Videos'
+ *       401:
+ *         allOf:
+ *           - $ref: '#/components/responses/401'
+ *       500:
+ *         allOf:
+ *           - $ref: '#/components/responses/500'
+ */
+router.get(`${paths.topVideos.path}/:numTop`, async (req, res) => {
+  return sendResponse(
+    req,
+    res,
+    await getTopRatedVideoslistController(req.params)
   );
 });
 

@@ -48,15 +48,15 @@ paths.ownVideos = {
   public: false,
 };
 paths.topVideos = {
-  path: `${paths.videos.path}/top-rated-videos`,
+  path: `${paths.api.path}/top-rated-videos`,
   public: false,
 };
 paths.privateVideos = {
-  path: `${paths.videos.path}/private-videos`,
+  path: `${paths.api.path}/private-videos`,
   public: false,
 };
 paths.publicVideos = {
-  path: `${paths.videos.path}/public-videos`,
+  path: `${paths.api.path}/public-videos`,
   public: true,
 };
 
