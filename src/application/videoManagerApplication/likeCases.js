@@ -43,7 +43,7 @@ async function addLikeCase(userId, videoId) {
     },
   });
 
-  if (gatewayLikeAddedResponse.status === 200) {
+  if (gatewayLikeAddedResponse.status === 201) {
     return response.success(200, 'Like added successfully.', {});
   }
 

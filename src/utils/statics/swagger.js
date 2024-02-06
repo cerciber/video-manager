@@ -32,6 +32,14 @@ module.exports = {
       name: 'Videos',
       description: 'Videos requests.',
     },
+    {
+      name: 'Likes',
+      description: 'Likes requests.',
+    },
+    {
+      name: 'Comments',
+      description: 'Comments requests.',
+    },
   ],
   components: {
     schemas: {},

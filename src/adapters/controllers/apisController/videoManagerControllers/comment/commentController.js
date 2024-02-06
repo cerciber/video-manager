@@ -1,9 +1,9 @@
 // Imports
 const response = require('@src/adapters/presenters/response');
 const {
-  addLikeCase,
-  removeLikeCase,
-} = require('@src/application/videoManagerApplication/likeCases');
+  addCommentCase,
+  removeCommentCase,
+} = require('@src/application/videoManagerApplication/commentCases');
 const {
   validate,
 } = require('@src/adapters/controllers/validation/validationController');
@@ -13,16 +13,16 @@ const {
 } = require('@src/adapters/controllers/validation/validationFunctions');
 
 // Add
-async function addLikeController(body) {
+async function addCommentController(body) {
   // Get input
-  const like = body;
+  const comment = body;
 
   // Validate input
   const inputValidation = validate([
     [
       validateSchema,
-      ['LikeNoId', like],
-      'Like schema not have correct structure.',
+      ['CommentNoId', comment],
+      'Comment schema not have correct structure.',
     ],
   ]);
 
@@ -36,32 +36,27 @@ async function addLikeController(body) {
   }
 
   // Apply bussiness logic
-  const addLikeResponse = await addLikeCase(like.userId, like.videoId);
-
-  if (addLikeResponse.status === 201) {
-    return response.success(201, 'Like added successfully.', {});
-  }
+  const addCommentResponse = await addCommentCase(
+    comment.userId,
+    comment.videoId,
+    comment.comment
+  );
 
   // Return output
-  return addLikeResponse;
+  return addCommentResponse;
 }
 
 // Remove by id
-async function removeLikeController(params) {
+async function removeCommentController(params) {
   // Get input
-  const { userId, videoId } = params;
+  const { commentId } = params;
 
   // Validate input
   const inputValidation = validate([
     [
       validatePositiveIntegerString,
-      [userId],
-      'Param userId not is an positive integer string type.',
-    ],
-    [
-      validatePositiveIntegerString,
-      [videoId],
-      'Param videoId not is an positive integer string type.',
+      [commentId],
+      'Param commentId not is an positive integer string type.',
     ],
   ]);
 
@@ -75,17 +70,14 @@ async function removeLikeController(params) {
   }
 
   // Apply bussiness logic
-  const deleteLikeResponse = await removeLikeCase(
-    Number(userId),
-    Number(videoId)
-  );
+  const deleteCommentResponse = await removeCommentCase(Number(commentId));
 
   // Return correct validation output
-  return deleteLikeResponse;
+  return deleteCommentResponse;
 }
 
 // Exports
 module.exports = {
-  addLikeController,
-  removeLikeController,
+  addCommentController,
+  removeCommentController,
 };
